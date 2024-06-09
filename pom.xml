@@ -4,6 +4,12 @@
   <artifactId>myexample</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name> MyExcam NguyenThiLinhLinh</name>
+  
+   <properties>
+    <maven.compiler.source>22</maven.compiler.source>
+    <maven.compiler.target>22</maven.compiler.target>
+  </properties>
+  
   <dependencies>
     <!-- Jackson Databind -->
     <dependency>
