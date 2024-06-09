@@ -1,0 +1,62 @@
+package com.example.menu;
+import java.io.IOException;
+
+import com.example.helper.RegexConst;
+import com.example.helper.Valid;
+import com.example.manage.ListStudent;
+public class Menu {
+	public static void showMenu() {
+//		Iterator<Student> students = STUDENT_MAPS.value().iterator();
+		
+		ListStudent list = new ListStudent();
+		while(true) {
+			System.out.println("==========input selection===========");
+			System.out.println("Chọn 1 để thêm 1 sinh viên ");
+			System.out.println("Chọn 2 xóa sinh viên");
+			System.out.println("Chọn 3 để tìm kiếm sinh viên");
+			System.out.println("Chọn 4 để cập nhật sinh viên");
+			System.out.println("Chọn 5 để sắp xếp danh sách sinh viên");
+			System.out.println("Chọn 6 để hiển thị toàn bộ thông tin tất cả sinh viên");
+			System.out.println("Chọn 7 tính tuổi sinh viên");
+			System.out.println("Chọn 8 thống kê sinh viên theo tháng");
+			System.out.println("Chọn 9 để lưu danh sách sinh viên xuống tệp JSON");
+            System.out.println("Chọn 10 để đọc danh sách sinh viên từ tệp JSON");
+            System.out.println("Chọn bất kì để thoát");
+			System.out.println("=================================");
+			
+			int choose = Integer.parseInt(
+					Valid.input(RegexConst.ID, "==========vui lòng chọn :=========="));
+			
+			
+			switch(choose) {
+			case 1 -> list.addList();
+			case 2 -> list.deleteList();
+			case 3 -> list.seekStudentbyId();
+			case 4 -> list.updateList();
+			case 5 -> list.sortList();
+			case 6 -> list.showList();
+			case 7 -> list.calAge();
+			case 8 -> list.thongKeTheoThang();
+			case 9 -> {
+				try {
+					list.saveToJson("students.json");
+					System.out.println("lưu danh sách sinh viên thành công");
+				}catch(IOException e){
+					System.err.println("Lỗi khi lưu danh sách sinh viên: " + e.getMessage());
+				}
+			}
+			case 10 -> {
+				try {
+					list.loadFromJson("students.json");
+					System.out.println("Đọc danh sách sinh viên thành công.");
+					list.showList();
+				}catch(IOException e) {
+					System.err.println("Lỗi khi đọc danh sách sinh viên: " + e.getMessage());
+				}
+			}
+			default -> System.exit(0);
+		}
+		}
+		
+	}
+}
