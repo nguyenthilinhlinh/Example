@@ -1,6 +1,9 @@
 package com.example.manage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -12,6 +15,8 @@ import com.example.model.Student;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import database.ConnectionDB;
 
 public class ListStudent implements ICrud {
 	private List<Student> listStd;
@@ -33,9 +38,9 @@ public class ListStudent implements ICrud {
 	//=========thêm sinh viên================	
 	@Override
 	public void addList() {
-//		var std = new Student();
-//		std.insertStudent();
-//		listStd.add(std);
+		var std = new Student();
+		std.insertStudent();
+		listStd.add(std);
 		
 	}
 
@@ -187,6 +192,72 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
     		
     }
 	 
+    public void loadDB() throws SQLException {
+    	Connection connection = null;
+    	java.sql.Statement statement = null;
+    	
+    	try {
+    		connection = ConnectionDB.getConnection();
+			statement = connection.createStatement();
+			
+    		ResultSet rs = statement.executeQuery("select id, name, birthday, address, gender from students");
+
+    		listStd = new ArrayList<>();
+    		while(rs.next()) {
+				listStd.add(new Student(rs.getInt(1), rs.getString(2), rs.getBoolean(5), 
+    					rs.getDate(3).toLocalDate(), rs.getString(4)));
+    		}
+    		System.out.println("Load students successful");
+    	} catch(SQLException e) {
+    		e.printStackTrace();
+    	} finally {
+    		if (statement != null) {
+    			statement.close();
+    		}
+    		ConnectionDB.close(connection);
+    	}
+    	
+    }
+    
+    public void saveDB() throws SQLException {
+    	if (listStd.isEmpty()) { 
+    		// delete all
+    		
+		}
+    	
+    	String sqlInsert = "insert into students (name, birthday, address, gender) values(?, ?, ?, ?)";
+    	
+    	Connection connection = null;
+    	java.sql.PreparedStatement statement = null;
+    	
+    	try {
+    		connection = ConnectionDB.getConnection();
+			statement = connection.prepareStatement(sqlInsert);
+			
+    		for (Student std : listStd) {
+    			statement.setString(1, std.getStdName());
+    			statement.setDate(2, java.sql.Date.valueOf(std.getBirthDay())); // Use the java.sql.Date instance
+    			statement.setString(3, std.getAddress());
+    			statement.setInt(4, std.isGender() ? 1 : 0); // Assuming gender is represented by an integer
+    			int numberOfRowResult= statement.executeUpdate();
+    		}
+    		
+    		connection.commit();
+    		
+    		System.out.println("Save students successful!");
+    	} catch(SQLException e) {
+    		connection.rollback();
+    	} finally {
+    		if (statement != null) {
+    			statement.close();
+    		}
+    		ConnectionDB.close(connection);
+    	}
+    }
+    
+    
+    
+    
 
 	
 }
