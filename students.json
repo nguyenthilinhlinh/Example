@@ -1,0 +1,72 @@
+[
+    {
+        "stdId": 1,
+        "stdName": "Nguyễn Văn A",
+        "birthDay": [2001, 4, 15],
+        "address": "123 Phố Huế, Hà Nội",
+        "gender": true
+    },
+    {
+        "stdId": 2,
+        "stdName": "Trần Thị B",
+        "birthDay": [2002, 5, 23],
+        "address": "456 Nguyễn Trãi, TP.HCM",
+        "gender": false
+    },
+    {
+        "stdId": 3,
+        "stdName": "Lê Văn C",
+        "birthDay": [2000, 11, 5],
+        "address": "789 Lê Lợi, Đà Nẵng",
+        "gender": true
+    },
+    {
+        "stdId": 4,
+        "stdName": "Phạm Thị D",
+        "birthDay": [2001, 1, 12],
+        "address": "321 Trần Hưng Đạo, Cần Thơ",
+        "gender": false
+    },
+    {
+        "stdId": 5,
+        "stdName": "Hoàng Văn E",
+        "birthDay": [2003, 7, 19],
+        "address": "654 Lý Thường Kiệt, Hà Nội",
+        "gender": true
+    },
+    {
+        "stdId": 6,
+        "stdName": "Vũ Thị F",
+        "birthDay": [2002, 3, 8],
+        "address": "987 Quang Trung, Hải Phòng",
+        "gender": false
+    },
+    {
+        "stdId": 7,
+        "stdName": "Đặng Văn G",
+        "birthDay": [2000, 9, 29],
+        "address": "159 Hai Bà Trưng, Vinh",
+        "gender": true
+    },
+    {
+        "stdId": 8,
+        "stdName": "Ngô Thị H",
+        "birthDay": [2001, 6, 14],
+        "address": "753 Trưng Vương, Biên Hòa",
+        "gender": false
+    },
+    {
+        "stdId": 9,
+        "stdName": "Đỗ Văn I",
+        "birthDay": [2003, 2, 27],
+        "address": "852 Nguyễn Huệ, Huế",
+        "gender": true
+    },
+    {
+        "stdId": 10,
+        "stdName": "Bùi Thị K",
+        "birthDay": [2002, 12, 5],
+        "address": "951 Trần Phú, Nha Trang",
+        "gender": false
+    }
+]

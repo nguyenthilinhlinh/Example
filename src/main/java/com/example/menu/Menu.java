@@ -5,11 +5,19 @@ import com.example.helper.RegexConst;
 import com.example.helper.Valid;
 import com.example.manage.ListStudent;
 public class Menu {
-	public static void showMenu() {
+	
+	private ListStudent list;
+	
+	public Menu(ListStudent list) {
+		this.list = list;
+	}
+	
+	public void showMenu() {
 //		Iterator<Student> students = STUDENT_MAPS.value().iterator();
 		
-		ListStudent list = new ListStudent();
-		while(true) {
+	
+		boolean _continue = true;
+		while(_continue) {
 			System.out.println("==========input selection===========");
 			System.out.println("Chọn 1 để thêm 1 sinh viên ");
 			System.out.println("Chọn 2 xóa sinh viên");
@@ -54,7 +62,7 @@ public class Menu {
 					System.err.println("Lỗi khi đọc danh sách sinh viên: " + e.getMessage());
 				}
 			}
-			default -> System.exit(0);
+			default -> _continue = false;
 		}
 		}
 		

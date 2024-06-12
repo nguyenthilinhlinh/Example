@@ -16,8 +16,8 @@ public class Student {
 	private String address;
 
 //	====constructor ========//
-//	public Student() {
-//	}
+	public Student() {
+	}
 
 	public Student(int stdId, String stdName, boolean gender, LocalDate birthDay, String address) {
 //		if (stdName.length() > 50) {
