@@ -2,6 +2,7 @@ package com.example.manage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import database.ConnectDB;
 import database.ConnectionDB;
 
 public class ListStudent implements ICrud {
@@ -200,7 +202,7 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
     		connection = ConnectionDB.getConnection();
 			statement = connection.createStatement();
 			
-    		ResultSet rs = statement.executeQuery("select id, name, birthday, address, gender from students");
+    		ResultSet rs = statement.executeQuery("select msv, name, birthday, address, gender from students");
 
     		listStd = new ArrayList<>();
     		while(rs.next()) {
@@ -226,7 +228,7 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
 		}
     	
     	String sqlInsert = "insert into students (name, birthday, address, gender) values(?, ?, ?, ?)";
-    	
+    		
     	Connection connection = null;
     	java.sql.PreparedStatement statement = null;
     	
@@ -239,8 +241,10 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
     			statement.setDate(2, java.sql.Date.valueOf(std.getBirthDay())); // Use the java.sql.Date instance
     			statement.setString(3, std.getAddress());
     			statement.setInt(4, std.isGender() ? 1 : 0); // Assuming gender is represented by an integer
+//    			statement.addBatch();
     			int numberOfRowResult= statement.executeUpdate();
     		}
+//    		statement.executeBatch();
     		
     		connection.commit();
     		
@@ -254,8 +258,52 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
     		ConnectionDB.close(connection);
     	}
     }
-    
-    
+    public static void updateStudent() {
+		int id = Integer.parseInt(
+				Valid.input(RegexConst.ID,
+						"Vui lòng nhập ID sinh viên để cập nhật: "));
+		String name = Valid.input(RegexConst.NAME, "Vui lòng nhập họ tên: ");
+
+		LocalDate birthday = LocalDate.parse(
+				Valid.input(RegexConst.DATE,
+						"Vui lòng nhập ngày sinh (dd-MM-yyyy) (dd/MM/yyyy): "),
+				DateTimeFormatter.ofPattern("[dd-MM-yyyy][dd/MM/yyyy]"));
+
+		String address = Valid.input(RegexConst.ADDRESS,
+				"Vui lòng nhập địa chỉ: ");
+
+		boolean isGender = Valid.input(RegexConst.GENDER,
+				"Vui lòng nhập giới tính (1 - nam, 0 - nữ): ")
+				.equals("1");
+
+
+		updateStdWithDB(id, name, isGender, java.sql.Date.valueOf(birthday), address);
+	}
+    public static void updateStdWithDB(int stdId, String name, boolean gender, java.sql.Date birthday, String address
+			) {
+		String sql = "UPDATE Student " + "SET name = ?, " + " gender = ?, " + "birthday = ?,"
+				+ "address = ?, "+ "WHERE stuId = ?";
+
+		try (
+				Connection con = ConnectionDB.getConnection(); 
+				PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+			pstmt.setString(1, name);
+			pstmt.setBoolean(2, gender);
+			pstmt.setDate(3, birthday);
+			pstmt.setString(4, address);
+			pstmt.setInt(5, stdId);
+
+			int rowsAffected = pstmt.executeUpdate();
+
+			System.out.println("Cập nhật thành công cho sinh viên có ID: " + stdId + ". " + rowsAffected
+					+ " bản ghi được cập nhật.");
+
+		} catch (SQLException ex) {
+			System.err.println("Lỗi khi cập nhật sinh viên: " + ex.getMessage());
+			ex.printStackTrace();
+		}
+	}
     
     
 

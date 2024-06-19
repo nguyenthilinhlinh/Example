@@ -1,7 +1,6 @@
 package database;
 
 import java.sql.DriverManager;
-
 public class ConnectDB {
 	public static void main(String[] args) {
 		String str = "jdbc:sqlserver://LINH:1433;"
