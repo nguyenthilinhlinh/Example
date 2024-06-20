@@ -262,8 +262,13 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
 		int id = Integer.parseInt(
 				Valid.input(RegexConst.ID,
 						"Vui lòng nhập ID sinh viên để cập nhật: "));
-		String name = Valid.input(RegexConst.NAME, "Vui lòng nhập họ tên: ");
+		String stdname = Valid.input(RegexConst.NAME, "Vui lòng nhập họ tên: ");
 
+		
+		boolean isGender = Valid.input(RegexConst.GENDER,
+				"Vui lòng nhập giới tính (1 - nam, 0 - nữ): ")
+				.equals("1");
+		
 		LocalDate birthday = LocalDate.parse(
 				Valid.input(RegexConst.DATE,
 						"Vui lòng nhập ngày sinh (dd-MM-yyyy) (dd/MM/yyyy): "),
@@ -272,23 +277,19 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
 		String address = Valid.input(RegexConst.ADDRESS,
 				"Vui lòng nhập địa chỉ: ");
 
-		boolean isGender = Valid.input(RegexConst.GENDER,
-				"Vui lòng nhập giới tính (1 - nam, 0 - nữ): ")
-				.equals("1");
 
-
-		updateStdWithDB(id, name, isGender, java.sql.Date.valueOf(birthday), address);
+		updateStdWithDB(id, stdname, isGender, java.sql.Date.valueOf(birthday), address);
 	}
-    public static void updateStdWithDB(int stdId, String name, boolean gender, java.sql.Date birthday, String address
+    public static void updateStdWithDB(int stdId, String stdname, boolean gender, java.sql.Date birthday, String address
 			) {
-		String sql = "UPDATE Student " + "SET name = ?, " + " gender = ?, " + "birthday = ?,"
-				+ "address = ?, "+ "WHERE stuId = ?";
+		String sql = "UPDATE students " + "SET name = ?, " + " gender = ?, " + "birthday = ?,"
+				+ "address = ? " + "WHERE msv = ?";
 
 		try (
 				Connection con = ConnectionDB.getConnection(); 
 				PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-			pstmt.setString(1, name);
+			pstmt.setString(1, stdname);
 			pstmt.setBoolean(2, gender);
 			pstmt.setDate(3, birthday);
 			pstmt.setString(4, address);
@@ -304,6 +305,39 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
 			ex.printStackTrace();
 		}
 	}
+
+	@Override
+	public void sortDescDB() {
+    	String sortsql = """
+    				select * from students order by msv desc
+    				OFFSET 0 ROWS
+    				FETCH NEXT 5 ROWS ONLY;
+    			""";
+    	try (
+    			Connection connection = ConnectionDB.getConnection();
+    			PreparedStatement prestmt = connection.prepareStatement(sortsql);
+    			
+        		ResultSet rs = prestmt.executeQuery();
+    			){
+    		System.out.println("sap xếp danh sách sinh viên giảm dần: ");
+    		
+    		while(rs.next()) {
+				
+				System.out.print(rs.getInt("msv"));
+				System.out.print("\t" + rs.getString("name"));
+				System.out.print("\t" + rs.getBoolean("gender"));
+				System.out.print("\t" + rs.getDate("birthday"));
+				System.out.print("\t" + rs.getString("address"));
+				System.out.println();
+    		}
+    	} catch(SQLException e) {
+    		e.printStackTrace();
+    	} 
+		
+	}
+   
+    
+   
     
     
 

@@ -30,8 +30,10 @@ public class Menu {
 			System.out.println("Chọn 8 thống kê sinh viên theo tháng");
 			System.out.println("Chọn 9 để lưu danh sách sinh viên xuống tệp JSON");
 			System.out.println("Chọn 10 để đọc danh sách sinh viên từ tệp JSON");
-			System.out.println("Chọn 11 để đọc danh sách sinh viên từ database");
+			System.out.println("Chọn 11 để lấy danh sách sinh vien từ database");
 			System.out.println("Chọn 12 để lưu danh sách vào cơ sở dữ liệu");
+			System.out.println("Chọn 13 để cập nhật thông tin sinh viên  trên db");
+			System.out.println("Chọn 14 sort");
             System.out.println("Chọn bất kì để thoát");
 			System.out.println("=================================");
 			
@@ -79,6 +81,8 @@ public class Menu {
 			}
 			catch (SQLException e) {
 				e.printStackTrace();}}
+			case 13 -> ListStudent.updateStudent();
+			case 14 -> list.sortDescDB();
 			default -> _continue = false;
 		}
 		}
