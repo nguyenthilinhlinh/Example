@@ -12,5 +12,6 @@ public interface ICrud {
 	void showList();
 	void calAge();
 //	boolean seekStudentById();
+	void sortDescDB();
 	
 }
