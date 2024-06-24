@@ -28,7 +28,6 @@ public class Student {
 		this.gender = gender;
 		this.birthDay = birthDay;
 		this.address = address;
-		System.out.println("constructor");
 	}
 	public Student(int stdId, String stdName) {
 		this.stdId = stdId;

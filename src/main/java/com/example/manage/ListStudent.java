@@ -17,8 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import database.ConnectDB;
-import database.ConnectionDB;
+import com.example.database.ConnectDB;
+import com.example.database.ConnectionDB;
 
 public class ListStudent implements ICrud {
 	private List<Student> listStd;
@@ -308,19 +308,25 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
 
 	@Override
 	public void sortDescDB() {
-    	String sortsql = """
-    				select * from students order by msv desc
-    				OFFSET 0 ROWS
-    				FETCH NEXT 5 ROWS ONLY;
-    			""";
+
+		String sortField = "birthday"; // default sort field
+		int offset = 1; // starting row offset
+	    int pageSize = 5; // number of rows per page
+	    int asc = 1;
     	try (
     			Connection connection = ConnectionDB.getConnection();
-    			PreparedStatement prestmt = connection.prepareStatement(sortsql);
+    			java.sql.CallableStatement statement = connection.prepareCall("{call GetStudentsPagedSorted(?, ?, ?,?)}");
     			
-        		ResultSet rs = prestmt.executeQuery();
+
     			){
-    		System.out.println("sap xếp danh sách sinh viên giảm dần: ");
+    		statement.setString(1, sortField);
+    		statement.setInt(2, offset);
+			statement.setInt(3, pageSize);
+			statement.setInt(4, asc);
+			ResultSet rs = statement.executeQuery();
     		
+    		System.out.println("sap xếp danh sách sinh viên giảm dần: ");
+
     		while(rs.next()) {
 				
 				System.out.print(rs.getInt("msv"));
@@ -330,16 +336,39 @@ System.out.println("===Vui lòng cập nhật lại thông tin sinh viên=== ");
 				System.out.print("\t" + rs.getString("address"));
 				System.out.println();
     		}
+
+    		listStd = new ArrayList<>();
+
+        		while(rs.next()) {
+        			Student student = new Student(
+        					rs.getInt("msv"),
+							rs.getString("name"),
+							rs.getBoolean("gender"),
+							rs.getDate("birthday").toLocalDate(),
+							rs.getString("address")
+							);	
+        			listStd.add(student);
+        			
+    				System.out.print("\t" + rs.getInt("msv"));
+    				System.out.print("\t" + rs.getString("name"));
+    				System.out.print("\t" + rs.getBoolean("gender"));
+    				System.out.print("\t" + rs.getDate("birthday"));
+    				System.out.print("\t" + rs.getString("address"));
+    				System.out.println();
+    				System.out.println(student);
+//    		)
+
+    		} 
     	} catch(SQLException e) {
     		e.printStackTrace();
     	} 
 		
+	
+   
+    
+   
+    
 	}
-   
-    
-   
-    
-    
 
 	
 }
